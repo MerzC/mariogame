@@ -92,8 +92,8 @@ class RecordingListener implements AudioListener {
       float coherenceJump = compareChunks(jump, stream);
       float coherenceCrouch = compareChunks(crouch, stream);
       
-      if (coherenceJump > 0.5)   m.jump();
-      if (coherenceCrouch > 0.5) m.crouch();
+      if (coherenceJump > 0.5 && coherenceJump > coherenceCrouch)   m.jump();
+      if (coherenceCrouch > 0.5 && coherenceCrouch > coherenceJump) m.crouch();
     
     }
     

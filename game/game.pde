@@ -73,7 +73,6 @@ void draw() {
        score = 0;
      }
     
-    
     fill(100,255, 50);
     textSize(64);
     text(score, 0, 120);
@@ -86,31 +85,10 @@ void draw() {
   }
 }
 
-
-void keyPressed() {
-  switch (keyCode) {
-   case 38://up
-     up = true;
-     return;
-   case 40://down
-     down = true;
-     return;
-   }
-}
 void keyReleased() {
   if (screen == 0 && key == 'r') {
     if (!hasJumpSound()) handleRecordingJump();
     else handleRecordingCrouch();
-    
-  } else if (screen == 1) {
-    switch (keyCode) {
-     case 38: //up
-       up = false;
-       break;
-     case 40: //down
-       down = false;
-       break;
-    }
   }
 }
 

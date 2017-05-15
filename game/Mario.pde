@@ -1,4 +1,4 @@
-class Mario{
+class Mario {
   float w,h,x,y,vx,vy,
   accelerationX,accelerationY,
   speedLimit,friction,bounce,gravity;
