@@ -15,7 +15,7 @@ int screen = 0;
 
 ArrayList<Obstacle> obstacles  = new ArrayList<Obstacle>();
 
-void setup(){
+void setup() {
   size(800,600);
   setupRecording();
   img = loadImage("background.png");
@@ -115,16 +115,15 @@ void keyReleased() {
 }
 
 
-
 void startScreen() {
   background(0);  
   if (!hasJumpSound()) {
     text("Press r to start and stop recording the jump sound", height/2, width/2);
   } else if (!hasCrouchSound()) {
     text("Press r to start and stop recording the crouch sound", height/2, width/2);
-  }
-  else {
+  } else {
     screen = 1;
+    startStreamAnalysis();
   }
   
   if (isRecording()) {

@@ -1,4 +1,3 @@
-/*
 
 // draw is run many times
 void drawAnalysis() {
@@ -18,4 +17,3 @@ void drawAnalysis(float[] spectrum, int place) {
     line(x, y, x, y - val);
   }
 }
-*/

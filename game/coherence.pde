@@ -1,23 +1,22 @@
+static int FFT_SIZE = 1024;
+
 
 float[] analyzeStream(AudioRecordingStream stream) {
-  int fftSize = 1024;
- 
-  recorder = null;
   
   // tell it to "play" so we can read from it.
   stream.play();
   
   // create the fft we'll use for analysis
-  FFT fft = new FFT( fftSize, stream.getFormat().getSampleRate() );
+  FFT fft = new FFT( FFT_SIZE, stream.getFormat().getSampleRate() );
   
   // create the buffer we use for reading from the stream
-  MultiChannelBuffer buffer = new MultiChannelBuffer(fftSize, stream.getFormat().getChannels());
+  MultiChannelBuffer buffer = new MultiChannelBuffer(FFT_SIZE, stream.getFormat().getChannels());
   
   // figure out how many samples are in the stream so we can allocate the correct number of spectra
   int totalSamples = int( (stream.getMillisecondLength() / 1000.0) * stream.getFormat().getSampleRate() );
   
   // now we'll analyze the samples in chunks
-  int totalChunks = (totalSamples / fftSize) + 1;
+  int totalChunks = (totalSamples / FFT_SIZE) + 1;
   
   int maxSum = 0;
   float[] maxSpectra = null;
@@ -27,9 +26,9 @@ float[] analyzeStream(AudioRecordingStream stream) {
     fft.forward( buffer.getChannel(0) );
     
     int sum = 0;
-    float[] spectrum = new float[fftSize/2];
+    float[] spectrum = new float[FFT_SIZE/2];
     
-    for (int i = 0; i < fftSize/2; ++i) {
+    for (int i = 0; i < FFT_SIZE/2; ++i) {
       sum += fft.getBand(i);
       spectrum[i] = fft.getBand(i);
     }
@@ -43,7 +42,11 @@ float[] analyzeStream(AudioRecordingStream stream) {
 }
 
 float compareChunks(float[] a, float[] b) {
+  float equality = 0;
   
-  // todo
-  return 0;
+  
+  for (int i = 0; i < a.length; i++) {
+    equality += a[i] < b[i] ? (a[i] / b[i]) : (b[i]/a[i]);
+  }
+  return equality / a.length;
 }

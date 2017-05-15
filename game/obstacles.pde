@@ -61,7 +61,6 @@ boolean hits(Mario b) {
 
   }
 
-
   void update() {
     x -= speed;
     image(obstacleimg,x,top);

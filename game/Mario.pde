@@ -58,7 +58,7 @@ class Mario{
 
     ////move the player
     y+=vy;
-    println(y);
+    //println(y);
   
     if(down){
       h = 45;
