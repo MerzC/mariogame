@@ -7,8 +7,8 @@ Minim minim;
 AudioInput in;
 AudioRecorder recorder;
 
-float[] jump = null;
-float[] crouch = null;
+float[][] jump;
+float[][] crouch;
 
 void setupRecording() {
   minim = new Minim(this);
@@ -30,7 +30,7 @@ int stopRecording(int action) {
   if (!isRecording()) return -1;
   // stop recorder and get audioRecordingStream
   recorder.endRecord();
-  float[] analysis = analyzeStream(recorder.save());
+  float[][] analysis = analyzeStream(recorder.save());
   recorder = null;
   
   switch(action) {
@@ -69,6 +69,8 @@ void startStreamAnalysis() {
 
 int xyz = 0;
 class RecordingListener implements AudioListener {
+  float[] prevPrevSpectrum;
+  float[] prevSpectrum;
   FFT fft;
   
   public RecordingListener(float sampleRate) {
@@ -78,15 +80,24 @@ class RecordingListener implements AudioListener {
   public synchronized void samples(float[] samp) {
   }
   
-  public synchronized void samples(float[] sampL, float[] sampR) {
-    fft.forward(sampL);
+  public synchronized void samples(float[] samp, float[] sampR) {
+    fft.forward(samp);
     float[] spectrum = new float[FFT_SIZE/2];
     for (int i = 0; i < FFT_SIZE/2; ++i) {
       spectrum[i] = fft.getBand(i);
+    }    
+    if (prevPrevSpectrum != null) {
+      float[][] stream = new float[][]{prevPrevSpectrum, prevSpectrum, spectrum};
+      
+      float coherenceJump = compareChunks(jump, stream);
+      float coherenceCrouch = compareChunks(crouch, stream);
+      
+      if (coherenceJump > 0.5)   m.jump();
+      if (coherenceCrouch > 0.5) m.crouch();
+    
     }
-    float coherenceJump = compareChunks(jump, spectrum);
-    float coherenceCrouch = compareChunks(crouch, spectrum);
-    if (coherenceJump > 0.5) println("JUMP       (" + coherenceJump + ")");
-    if (coherenceCrouch > 0.5) println("CROUCH     (" + coherenceCrouch + ")");
+    
+    prevPrevSpectrum = prevSpectrum;
+    prevSpectrum = spectrum;
   }
 }

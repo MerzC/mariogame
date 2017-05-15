@@ -1,8 +1,8 @@
 
 // draw is run many times
 void drawAnalysis() {
-  if (jump != null) drawAnalysis(jump, 1);
-  if (crouch != null) drawAnalysis(crouch, 2);
+  if (jump != null) drawAnalysis(jump[1], 1);
+  if (crouch != null) drawAnalysis(crouch[1], 2);
 }
 void drawAnalysis(float[] spectrum, int place) {
   fill(0);

@@ -38,9 +38,25 @@ class Mario{
     pos = new PVector(x,y);
   }
   
+  void jump() {
+    if (isOnGround) {
+      vy += jumpForce;
+      isOnGround = false;
+      friction = 1;
+    }
+  }
   
-  void update(){
-    if (up && isOnGround){
+  boolean isCrouching;
+  long crouchingTime = 0;
+  void crouch() {
+    if (isOnGround && !isCrouching) {
+      crouchingTime = System.currentTimeMillis();
+    }
+  }
+  
+  void update() {
+    if (up && isOnGround) {
+      crouchingTime = 0;
       vy += jumpForce;
       isOnGround = false;
       friction = 1;
@@ -60,7 +76,7 @@ class Mario{
     y+=vy;
     //println(y);
   
-    if(down){
+    if (System.currentTimeMillis() - crouchingTime < 1000) {
       h = 45;
       bounderay = 49;
     }
@@ -79,7 +95,7 @@ class Mario{
   }
   
   void display(){
-   if(down){
+   if (System.currentTimeMillis() - crouchingTime < 1000){
      image(marioc, x, y);
    }
    else{

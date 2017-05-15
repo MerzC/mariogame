@@ -1,7 +1,7 @@
 static int FFT_SIZE = 1024;
 
 
-float[] analyzeStream(AudioRecordingStream stream) {
+float[][] analyzeStream(AudioRecordingStream stream) {
   
   // tell it to "play" so we can read from it.
   stream.play();
@@ -18,27 +18,28 @@ float[] analyzeStream(AudioRecordingStream stream) {
   // now we'll analyze the samples in chunks
   int totalChunks = (totalSamples / FFT_SIZE) + 1;
   
+  float[][] spectra = new float[totalChunks][FFT_SIZE/2];
+  int maxSpectrumIx = -1;
   int maxSum = 0;
-  float[] maxSpectra = null;
   
   for (int chunkIdx = 0; chunkIdx < totalChunks; ++chunkIdx) {
     stream.read( buffer );
     fft.forward( buffer.getChannel(0) );
-    
     int sum = 0;
-    float[] spectrum = new float[FFT_SIZE/2];
     
     for (int i = 0; i < FFT_SIZE/2; ++i) {
       sum += fft.getBand(i);
-      spectrum[i] = fft.getBand(i);
+      spectra[chunkIdx][i] = fft.getBand(i);
     }
-    
     if (sum > maxSum) {
       maxSum = sum;
-      maxSpectra = spectrum;
+      maxSpectrumIx = chunkIdx;
     }
   }
-  return maxSpectra;
+  if( maxSpectrumIx == 0) maxSpectrumIx = 1;
+  if( maxSpectrumIx == totalChunks-1) maxSpectrumIx = totalChunks-2;
+  
+  return new float[][]{spectra[maxSpectrumIx-1], spectra[maxSpectrumIx], spectra[maxSpectrumIx + 1]};
 }
 
 float compareChunks(float[] a, float[] b) {
@@ -49,4 +50,12 @@ float compareChunks(float[] a, float[] b) {
     equality += a[i] < b[i] ? (a[i] / b[i]) : (b[i]/a[i]);
   }
   return equality / a.length;
+}
+
+float compareChunks(float[][] a, float[][] b) {
+  float equality = 0;
+  for (int i = 0; i < 3; i++) {
+    equality += compareChunks(a[i], b[i]);
+  }
+  return equality / 3;
 }
