@@ -27,7 +27,7 @@ int startRecording(int action) {
 }
 
 int stopRecording(int action) {
-  if (!isRecording()) return 0;
+  if (!isRecording()) return -1;
   // stop recorder and get audioRecordingStream
   recorder.endRecord();
   
@@ -35,24 +35,24 @@ int stopRecording(int action) {
   
   switch(action) {
     case 1:
-      crouch = analysis;
+      jump = analysis;
       break;
     case 2:
-      jump = analysis;
+      crouch = analysis;
       break;
   }
   
   return 0;
 }
 
-int currentRecording = 0;
+int currentRecording = -1;
 void handleRecordingJump() {
-  print("m:" + currentRecording);
   currentRecording = currentRecording == 1 ? stopRecording(1) : startRecording(1);
+  println("recording:" + currentRecording);
 }
 void handleRecordingCrouch() {
-  print("m:" + currentRecording);
   currentRecording = currentRecording == 2 ? stopRecording(2) : startRecording(2);
+  println("recording:" + currentRecording);
 }
 
 boolean isRecording() {

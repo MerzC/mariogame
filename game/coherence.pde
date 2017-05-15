@@ -43,6 +43,7 @@ float[] analyzeStream(AudioRecordingStream stream) {
 }
 
 float compareChunks(float[] a, float[] b) {
+  
   // todo
   return 0;
 }

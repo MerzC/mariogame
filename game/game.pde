@@ -31,8 +31,7 @@ void setup(){
 }
 
 
-void draw()
-{
+void draw() {
   if (screen == 0) {
     startScreen();    
   }
@@ -86,7 +85,7 @@ void draw()
     highscore = constrain(highscore, 0,highscore);
   }
 }
-  
+
 
 void keyPressed() {
   switch (keyCode) {
@@ -99,16 +98,11 @@ void keyPressed() {
    }
 }
 void keyReleased() {
-  if (screen == 0) {
-    switch(key) {
-      case 'j':
-        handleRecordingJump();
-        break;
-      case 'c':
-        handleRecordingCrouch();      
-        break;
-    }
-  } else {
+  if (screen == 0 && key == 'r') {
+    if (!hasJumpSound()) handleRecordingJump();
+    else handleRecordingCrouch();
+    
+  } else if (screen == 1) {
     switch (keyCode) {
      case 38: //up
        up = false;
@@ -122,14 +116,12 @@ void keyReleased() {
 
 
 
-void startScreen(){
-  background(0);
-
+void startScreen() {
+  background(0);  
   if (!hasJumpSound()) {
-    text("Press J to record Jump sound", height/2, width/2);
-  }
-  else if (!hasCrouchSound()) {
-    text("Press C to record Crouch sound", height/2, width/2);
+    text("Press r to start and stop recording the jump sound", height/2, width/2);
+  } else if (!hasCrouchSound()) {
+    text("Press r to start and stop recording the crouch sound", height/2, width/2);
   }
   else {
     screen = 1;
